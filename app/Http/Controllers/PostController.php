@@ -28,7 +28,7 @@ class PostController extends Controller
                 $posts = $posts->orderBy('title');
             }
         }
-        $posts = $posts->paginate(3)->withQueryString();
+        $posts = $posts->paginate(10)->withQueryString();
         return view('posts.index', compact('posts'));
     }
 
@@ -58,7 +58,7 @@ class PostController extends Controller
     public function update(Post $post)
     {
         $data = self::prepareValidation();
-        if ($data['image'] && $post->image) {
+        if (isset($data['image']) && $data['image'] && $post->image) {
             deleteFile($post->image);
         }
         $post->update($data);
@@ -82,7 +82,9 @@ class PostController extends Controller
             'image' => 'nullable|image|max:1000',
         ]);
 
-        $data['image'] = upload($data['image']);
+        if (isset($data['image']) && $data['image']) {
+            $data['image'] = upload($data['image']);
+        }
 
         return $data;
     }

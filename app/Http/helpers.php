@@ -1,0 +1,33 @@
+<?php
+
+function rn()
+{
+    return request()->route()->getName();
+}
+
+function short($string, $max=50)
+{
+    return mb_strlen($string) > $max ? mb_substr($string, 0, $max).'...' : $string;
+}
+
+function upload($newFile)
+{
+    $filename = randomSHA().".".$newFile->getClientOriginalExtension();
+    $newFile->move(base_path('storage/app/public'), $filename);
+    return "storage/$filename";
+}
+
+function deleteFile($path)
+{
+    \File::delete($path);
+}
+
+function randomSHA()
+{
+    return bin2hex(random_bytes(10));
+}
+
+function carbonToPersian($carbonDate)
+{
+    return \Morilog\Jalali\Jalalian::fromCarbon($carbonDate);
+}
